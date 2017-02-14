@@ -16,6 +16,7 @@ uint8_t test_switch::sos_seq[MAX_FRAMES] = {0,0,1,1,0,1,1,0,1,1,0,0,0,1,1,1,1,0,
 uint8_t test_switch::frame=0;
 str test_switch::pattern;
 uint8_t test_switch::plen;
+uint32_t test_switch::switch_state_prev=0;
 
 test_switch::test_switch() :
         scheduler_task("switch_tester", 4 * 512, PRIORITY_LOW)
@@ -99,6 +100,10 @@ bool test_switch::run(void *p)
 		frame %= plen;
 	}
 
+	if ((LPC_GPIO1->FIOPIN & (1 << 28)) != switch_state_prev) {
+		setMode(LED_SWITCH);
+		switch_state_prev = LPC_GPIO1->FIOPIN & (1 << 28);
+	}
 
 
     return true;

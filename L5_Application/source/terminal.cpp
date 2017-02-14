@@ -110,7 +110,12 @@ bool terminalTask::taskEntry()
                                                );
     cp.addHandler(learnIrHandler,  "learn",    "Begin to learn IR codes for numbers 0-9");
     cp.addHandler(wirelessHandler, "wireless", "Use 'wireless' to see the nested commands");
-    cp.addHandler(ledhandler, "led", "control externally attached LED");
+    cp.addHandler(ledhandler, "led", "control external LED\n"
+    									"'led on'	: turn LED on\n"
+    									"'led off'	: turn LED off\n"
+    									"'led strobe' : blink LED\n"
+    									"'led sos'	: blink sos message\n"
+    									"'led p<pattern>' : blink binary pattern. Ex 'blink p10101110'\n");
 
     /* Firmware upgrade handlers
      * Please read "netload_readme.txt" at ref_and_datasheets directory.

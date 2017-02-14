@@ -32,6 +32,7 @@ private:
 	static uint8_t frame;
 	static str pattern;
 	static uint8_t plen;
+	static uint32_t switch_state_prev;
 public:
 	static bool ledStatus;
     test_switch();
