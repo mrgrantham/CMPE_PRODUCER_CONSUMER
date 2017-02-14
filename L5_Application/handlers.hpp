@@ -72,6 +72,9 @@ CMD_HANDLER_FUNC(dcpHandler);
 /// Handler to format and mount storage mediums
 CMD_HANDLER_FUNC(storageHandler);
 
+/// Handler to control external LED
+CMD_HANDLER_FUNC(ledhandler);
+
 /// Handler to reboot the system
 CMD_HANDLER_FUNC(rebootHandler);
 

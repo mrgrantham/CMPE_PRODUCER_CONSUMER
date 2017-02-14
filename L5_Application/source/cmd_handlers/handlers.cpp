@@ -33,6 +33,7 @@
 #include "fat/disk/spi_flash.h"
 #include "spi_sem.h"
 #include "file_logger.h"
+#include "test_switch.hpp"
 
 #include "uart0.hpp"
 #include "wireless.h"
@@ -591,6 +592,22 @@ CMD_HANDLER_FUNC(storageHandler)
         return false;
     }
     return true;
+}
+
+CMD_HANDLER_FUNC(ledhandler)
+{
+	if(cmdParams == "on") {
+		test_switch::setMode(LED_ON);
+	} else if(cmdParams == "off") {
+		test_switch::setMode(LED_OFF);
+	} else if(cmdParams == "strobe") {
+		test_switch::setMode(LED_STROBE);
+	} else if(cmdParams == "switch") {
+		test_switch::setMode(LED_SWITCH);
+	} else {
+		return false;
+	}
+	return true;
 }
 
 CMD_HANDLER_FUNC(rebootHandler)
