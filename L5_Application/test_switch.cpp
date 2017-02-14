@@ -48,10 +48,10 @@ bool test_switch::run(void *p)
 {
 
 	if(ledMode == LED_OFF) {
-		LPC_GPIO1->FIOPIN |= (1 << 23);
+		LPC_GPIO1->FIOPIN &= ~(1 << 23);
 		ledStatus = false;
 	} else if(ledMode == LED_ON) {
-		LPC_GPIO1->FIOPIN &= ~(1 << 23);
+		LPC_GPIO1->FIOPIN |= (1 << 23);
 		ledStatus = true;
 	} else if(ledMode == LED_STROBE) {
 		if(!ledStatus) {
