@@ -25,6 +25,7 @@
  */
 #include "tasks.hpp"
 #include "examples/examples.hpp"
+#include "test_switch.hpp"
 
 /**
  * The main() creates tasks or "threads".  See the documentation of scheduler_task class at scheduler_task.hpp
@@ -40,6 +41,8 @@
  *        In either case, you should avoid using this bus or interfacing to external components because
  *        there is no semaphore configured for this bus and it should be used exclusively by nordic wireless.
  */
+
+
 int main(void)
 {
     /**
@@ -76,6 +79,10 @@ int main(void)
     #if 0
         scheduler_add_task(new example_io_demo());
     #endif
+
+	#if 1
+        scheduler_add_task(new test_switch());
+	#endif
 
     /**
      * Change "#if 0" to "#if 1" to enable examples.
