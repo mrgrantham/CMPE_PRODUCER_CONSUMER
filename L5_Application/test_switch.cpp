@@ -9,13 +9,18 @@
 #include <stdio.h>
 #include "LPC17xx.h"
 
+
 bool test_switch::ledStatus;
-uint8_t test_switch::ledMode;
+LedMode test_switch::ledMode;
+uint8_t test_switch::sos_seq[MAX_FRAMES] = {0,0,1,1,0,1,1,0,1,1,0,0,0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,0};
+uint8_t test_switch::frame=0;
+str test_switch::pattern;
+uint8_t test_switch::plen;
 
 test_switch::test_switch() :
         scheduler_task("switch_tester", 4 * 512, PRIORITY_LOW)
 {
-    setRunDuration(500);
+    setRunDuration(100);
 
     test_switch::ledStatus = false;
     test_switch::ledMode = LED_OFF;
@@ -67,6 +72,31 @@ bool test_switch::run(void *p)
 			LPC_GPIO1->FIOPIN &= ~(1 << 23);
 			ledStatus = false;
 		}
+	} else if(ledMode == LED_SOS) {
+		if(sos_seq[frame]) {
+			//printf("strobe HIGH\n");
+			LPC_GPIO1->FIOPIN |= (1 << 23);
+			ledStatus = true;
+		} else {
+			//printf("strobe LOW\n");
+			LPC_GPIO1->FIOPIN &= ~(1 << 23);
+			ledStatus = false;
+		}
+
+		frame ++;
+		frame %= MAX_FRAMES;
+
+	} else if (ledMode == LED_PATTERN) {
+		if(pattern[frame] == '1') {
+			LPC_GPIO1->FIOPIN |= (1 << 23);
+			ledStatus = true;
+		} else {
+			LPC_GPIO1->FIOPIN &= ~(1 << 23);
+			ledStatus = false;
+		}
+
+		frame ++;
+		frame %= plen;
 	}
 
 
@@ -74,9 +104,13 @@ bool test_switch::run(void *p)
     return true;
 }
 
-void test_switch::setMode(uint8_t mode) {
-
+void test_switch::setMode(LedMode mode) {
 	test_switch::ledMode = mode;
+	test_switch::frame = 0;
+}
 
+void test_switch::setPattern(str pat) {
+	pattern = pat;
+	plen = pattern.getLen();
 }
 

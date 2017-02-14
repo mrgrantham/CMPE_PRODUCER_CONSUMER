@@ -604,6 +604,12 @@ CMD_HANDLER_FUNC(ledhandler)
 		test_switch::setMode(LED_STROBE);
 	} else if(cmdParams == "switch") {
 		test_switch::setMode(LED_SWITCH);
+	} else if(cmdParams == "sos") {
+		test_switch::setMode(LED_SOS);
+	} else if (cmdParams.beginsWith("p")) {
+		cmdParams.eraseFirst(1);
+		test_switch::setPattern(cmdParams);
+		test_switch::setMode(LED_PATTERN);
 	} else {
 		return false;
 	}

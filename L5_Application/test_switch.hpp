@@ -10,19 +10,34 @@
 
 #include "scheduler_task.hpp"
 #include "stdint.h"
+#include "str.hpp"
 
-#define	LED_OFF 	0
-#define	LED_ON 		1
-#define	LED_STROBE 	2
-#define	LED_SWITCH 	3
+#define MAX_FRAMES 46
+
+
+enum LedMode {
+	LED_OFF,
+	LED_ON,
+	LED_STROBE,
+	LED_SWITCH,
+	LED_SOS,
+	LED_PATTERN
+};
+
 
 class test_switch : public scheduler_task {
+private:
+	static LedMode ledMode;
+	static uint8_t sos_seq[MAX_FRAMES];
+	static uint8_t frame;
+	static str pattern;
+	static uint8_t plen;
 public:
-	static uint8_t ledMode;
 	static bool ledStatus;
     test_switch();
     bool run(void *p);
-    static void setMode(uint8_t mode);
+    static void setMode(LedMode mode);
+    static void setPattern(str pat);
 };
 
 
