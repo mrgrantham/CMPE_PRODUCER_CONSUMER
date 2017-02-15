@@ -1,3 +1,25 @@
+GPIO HW ASSIGNMENT CMPE 244
+Controls LED on pin P0.23 via switch on
+P0.28 or via serial terminal commands
+
+Commands:
+    led on
+    led off
+    led strobe
+    led switch
+    led p<pattern>
+
+-----------------------
+Files added or modified
+-----------------------
+main.cpp
+test_switch.hpp
+test_switch.cpp
+handler.hpp
+handler.cpp
+terminal.cpp
+
+
 -----------------------------------------------------------------------------
 To get started, have a look at L5_Application/main.cpp and the example tasks.
 
