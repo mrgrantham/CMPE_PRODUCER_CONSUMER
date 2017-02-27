@@ -26,6 +26,7 @@
 #include "tasks.hpp"
 #include "examples/examples.hpp"
 #include "test_switch.hpp"
+#include "SPIdriver.hpp"
 
 /**
  * The main() creates tasks or "threads".  See the documentation of scheduler_task class at scheduler_task.hpp
@@ -80,8 +81,12 @@ int main(void)
         scheduler_add_task(new example_io_demo());
     #endif
 
-	#if 1
+	#if 0
         scheduler_add_task(new test_switch());
+	#endif
+
+	#if 1
+        scheduler_add_task(new SPIdriver());
 	#endif
 
     /**

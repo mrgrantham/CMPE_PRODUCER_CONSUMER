@@ -75,6 +75,9 @@ CMD_HANDLER_FUNC(storageHandler);
 /// Handler to control external LED
 CMD_HANDLER_FUNC(ledhandler);
 
+/// Handler to SSP
+CMD_HANDLER_FUNC(sspHandler);
+
 /// Handler to reboot the system
 CMD_HANDLER_FUNC(rebootHandler);
 

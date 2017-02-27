@@ -34,6 +34,7 @@
 #include "spi_sem.h"
 #include "file_logger.h"
 #include "test_switch.hpp"
+#include "SPIdriver.hpp"
 
 #include "uart0.hpp"
 #include "wireless.h"
@@ -610,6 +611,19 @@ CMD_HANDLER_FUNC(ledhandler)
 		cmdParams.eraseFirst(1);
 		test_switch::setPattern(cmdParams);
 		test_switch::setMode(LED_PATTERN);
+	} else {
+		return false;
+	}
+	return true;
+}
+
+/// Handler to SSP
+CMD_HANDLER_FUNC(sspHandler)
+{
+	if(cmdParams == "id") {
+		SPIdriver::get_device_id();
+	} else if(cmdParams == "other") {
+		printf("other stuff\n");
 	} else {
 		return false;
 	}
