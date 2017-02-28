@@ -624,6 +624,8 @@ CMD_HANDLER_FUNC(sspHandler)
 		SPIdriver::get_device_id();
 	} else if(cmdParams == "other") {
 		printf("other stuff\n");
+	} else if(cmdParams == "status") {
+		SPIdriver::get_status();
 	} else {
 		return false;
 	}

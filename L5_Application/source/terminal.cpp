@@ -126,7 +126,7 @@ bool terminalTask::taskEntry()
                                              "Write buffer: buffer <offset> <num bytes> ...\n"
                                              "Write buffer to file: commit <filename> <file offset> <num bytes from buffer>");
     cp.addHandler(flashProgHandler, "flash", "'flash <filename>' Will flash CPU with this new binary file");
-    cp.addHandler(sspHandler, "sspTest", "'ssp id' will give you the device details for the flash chip");
+    cp.addHandler(sspHandler, "ssp", "'ssp id' will give you the device details for the flash chip");
 
     #if (SYS_CFG_ENABLE_TLM)
     cp.addHandler(telemetryHandler, "telemetry", "Outputs registered telemetry: "

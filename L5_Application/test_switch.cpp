@@ -47,6 +47,7 @@ test_switch::test_switch() :
 bool test_switch::run(void *p)
 {
 
+//	printf("run switch\n");
 	if(ledMode == LED_OFF) {
 		LPC_GPIO1->FIOPIN &= ~(1 << 23);
 		ledStatus = false;

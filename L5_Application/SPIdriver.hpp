@@ -12,13 +12,26 @@
 #include "stdint.h"
 #include "str.hpp"
 
-class SPIdriver : public scheduler_task {
+enum SSPMode {
+	OFF_MODE,
+	ID_MODE,
+	STATUS_MODE,
+	DATA_MODE
+};
 
+class SPIdriver : public scheduler_task {
+private:
+	static SSPMode sspMode;
 public:
     SPIdriver();
     bool run(void *p);
-    char byte_transfer(char aByte);
+    bool init(void);
+    void chip_select_enable();
+	void chip_select_disable();
+    static void printBinary(uint8_t num);
+    static char byte_transfer(char aByte);
     static void get_device_id();
+    static void get_status();
 };
 
 

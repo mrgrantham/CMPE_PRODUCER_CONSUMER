@@ -81,7 +81,7 @@ int main(void)
         scheduler_add_task(new example_io_demo());
     #endif
 
-	#if 0
+	#if 1
         scheduler_add_task(new test_switch());
 	#endif
 
