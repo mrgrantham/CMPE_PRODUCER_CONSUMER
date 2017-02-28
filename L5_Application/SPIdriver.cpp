@@ -30,7 +30,9 @@ bool SPIdriver::run(void *p){
 	if (sspMode == ALL_MODE){
 		allMode = ID_MODE;
 		sspMode = ID_MODE;
-	} else if (sspMode == ID_MODE) {
+	}
+
+	if (sspMode == ID_MODE) {
 //		printf("Running ID_MODE\n");
 		uint8_t mfID;
 		uint8_t devID[2];
@@ -151,8 +153,8 @@ bool SPIdriver::run(void *p){
 		// cycle through all the modes
 		if(allMode == ID_MODE)  {
 			allMode = STATUS_MODE;
-		}
-		if(allMode == STATUS_MODE) {
+			sspMode = STATUS_MODE;
+		} else if(allMode == STATUS_MODE) {
 			allMode = OFF_MODE;
 		}
 	}
