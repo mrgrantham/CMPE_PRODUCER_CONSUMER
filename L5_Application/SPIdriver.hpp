@@ -16,13 +16,14 @@ enum SSPMode {
 	OFF_MODE,
 	ID_MODE,
 	STATUS_MODE,
-	SIG_MODE,
+	ALL_MODE,
 	DATA_MODE
 };
 
 class SPIdriver : public scheduler_task {
 private:
 	static SSPMode sspMode;
+	static SSPMode allMode;
 public:
     SPIdriver();
     bool run(void *p);

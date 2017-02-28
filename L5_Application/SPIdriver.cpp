@@ -11,6 +11,7 @@
 #include "printf_lib.h"
 
 SSPMode SPIdriver::sspMode = OFF_MODE;
+SSPMode SPIdriver::allMode = OFF_MODE;
 
 
 SPIdriver::SPIdriver() :
@@ -26,7 +27,10 @@ bool SPIdriver::run(void *p){
 		printf("\n---ADESTO AT45DB161E FLASH MEMORY---\n");
 	}
 
-	if (sspMode == ID_MODE) {
+	if (sspMode == ALL_MODE){
+		allMode = ID_MODE;
+		sspMode = ID_MODE;
+	} else if (sspMode == ID_MODE) {
 //		printf("Running ID_MODE\n");
 		uint8_t mfID;
 		uint8_t devID[2];
@@ -141,10 +145,16 @@ bool SPIdriver::run(void *p){
 		printf("ERASE SUSPEND: %s\n", eraseSuspend? "A SECTOR IS ERASE SUSPENDED" :"NO SECTORS ARE ERASE SUSPENDED");
 
 		sspMode = OFF_MODE;
-	} else if (sspMode == SIG_MODE) {
+	}
 
-		sspMode = OFF_MODE;
-
+	if (allMode != OFF_MODE) {
+		// cycle through all the modes
+		if(allMode == ID_MODE)  {
+			allMode = STATUS_MODE;
+		}
+		if(allMode == STATUS_MODE) {
+			allMode = OFF_MODE;
+		}
 	}
 
 	return true;
