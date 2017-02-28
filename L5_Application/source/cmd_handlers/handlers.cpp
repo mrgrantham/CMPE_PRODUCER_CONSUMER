@@ -621,11 +621,11 @@ CMD_HANDLER_FUNC(ledhandler)
 CMD_HANDLER_FUNC(sspHandler)
 {
 	if(cmdParams == "id") {
-		SPIdriver::get_device_id();
-	} else if(cmdParams == "other") {
-		printf("other stuff\n");
+		SPIdriver::setMode(ID_MODE);
 	} else if(cmdParams == "status") {
-		SPIdriver::get_status();
+		SPIdriver::setMode(STATUS_MODE);
+	} else if(cmdParams == "sig") {
+		SPIdriver::setMode(SIG_MODE);
 	} else {
 		return false;
 	}

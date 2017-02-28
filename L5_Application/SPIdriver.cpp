@@ -21,10 +21,10 @@ SPIdriver::SPIdriver() :
 }
 
 bool SPIdriver::run(void *p){
-	// choose action based on mode
 
-	//printf("run\n");
-	//u0_dbg_printf("run\n");
+	if (sspMode != OFF_MODE) {
+		printf("\n---ADESTO AT45DB161E FLASH MEMORY---\n");
+	}
 
 	if (sspMode == ID_MODE) {
 //		printf("Running ID_MODE\n");
@@ -33,6 +33,11 @@ bool SPIdriver::run(void *p){
 		uint8_t EDIstrLen;
 		uint8_t EDIstr[1];
 		int16_t count=0;
+
+		uint8_t familyCode;
+		uint8_t densityCode;
+		uint8_t subCode;
+		uint8_t productVariant;
 
 		chip_select_enable();
 		byte_transfer((uint8_t)0x9F);
@@ -45,9 +50,21 @@ bool SPIdriver::run(void *p){
 			EDIstr[count] = 	byte_transfer((uint8_t)0x9F);
 		}
 
+		familyCode = (devID[1] >> 5) & 7;
+		densityCode = devID[1] & 15;
+		subCode = (devID[0] >> 5) & 7;
+		productVariant = devID[0] & 15;
+
+
+
 		printf("\n");
-		printf("Manufacter ID: %02x\n",mfID);
+		printf("Manufacturer ID JEDEC CODE: %02x\n",mfID);
 		printf("Device ID: %04x\n",*((uint16_t*)devID));
+		printf("FAMILY CODE: %02x\n",familyCode);
+		printf("DENSITY CODE: %02x\n",densityCode);
+		printf("SUBCODE: %02x\n",subCode);
+		printf("PROD VAR: %02x\n",productVariant);
+
 		printf("Extended Device Information String Length: %d\n", EDIstrLen);
 		printf("Extended Device Information String: %02x\n",(uint8_t)EDIstr[0]);
 
@@ -124,6 +141,10 @@ bool SPIdriver::run(void *p){
 		printf("ERASE SUSPEND: %s\n", eraseSuspend? "A SECTOR IS ERASE SUSPENDED" :"NO SECTORS ARE ERASE SUSPENDED");
 
 		sspMode = OFF_MODE;
+	} else if (sspMode == SIG_MODE) {
+
+		sspMode = OFF_MODE;
+
 	}
 
 	return true;
@@ -132,7 +153,6 @@ bool SPIdriver::run(void *p){
 bool SPIdriver::init(void) {
 
 
-	printf("SSP1 initializing\n");
     // set the Chip Select Control
 
     // set P0.06 to GPIO
@@ -230,21 +250,9 @@ void SPIdriver::printBinary(uint8_t num) {
 }
 
 
-void SPIdriver::get_device_id() {
-//	printf("running get_device_id()\n");
-//	for (int i = 0; i < 20; i+=3) {
-//		printf("testing binary: %d: ",i);
-//		printBinary(i);
-//		printf("\n");
-//	}
-	sspMode = ID_MODE;
-
+void SPIdriver::setMode(SSPMode mode) {
+	sspMode = mode;
 }
 
-void SPIdriver::get_status() {
-//	printf("running get_status()\n");
 
-	sspMode = STATUS_MODE;
-
-}
 

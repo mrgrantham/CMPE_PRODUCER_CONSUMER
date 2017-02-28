@@ -16,6 +16,7 @@ enum SSPMode {
 	OFF_MODE,
 	ID_MODE,
 	STATUS_MODE,
+	SIG_MODE,
 	DATA_MODE
 };
 
@@ -30,8 +31,8 @@ public:
 	void chip_select_disable();
     static void printBinary(uint8_t num);
     static char byte_transfer(char aByte);
-    static void get_device_id();
-    static void get_status();
+    static void setMode(SSPMode mode);
+
 };
 
 
