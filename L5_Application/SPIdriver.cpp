@@ -282,10 +282,7 @@ bool SPIdriver::run(void *p){
 		if(allMode == ID_MODE)  {
 			allMode = STATUS_MODE;
 			sspMode = STATUS_MODE;
-		}  else if(allMode == STATUS_MODE) {
-			allMode = PAGE_MODE;
-			sspMode = PAGE_MODE;
-		} else if(allMode == PAGE_MODE) {
+		}  else if(allMode == STATUS_MODE)  {
 			allMode = OFF_MODE;
 		}
 	}
