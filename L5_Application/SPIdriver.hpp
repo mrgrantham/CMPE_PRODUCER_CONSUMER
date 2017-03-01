@@ -16,6 +16,7 @@ enum SSPMode {
 	OFF_MODE,
 	ID_MODE,
 	STATUS_MODE,
+	PAGE_MODE,
 	ALL_MODE,
 	DATA_MODE
 };

@@ -624,6 +624,8 @@ CMD_HANDLER_FUNC(sspHandler)
 		SPIdriver::setMode(ID_MODE);
 	} else if(cmdParams == "status") {
 		SPIdriver::setMode(STATUS_MODE);
+	} else if(cmdParams == "page") {
+		SPIdriver::setMode(PAGE_MODE);
 	} else if(cmdParams == "all") {
 		SPIdriver::setMode(ALL_MODE);
 	} else {

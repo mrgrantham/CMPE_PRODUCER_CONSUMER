@@ -56,6 +56,10 @@ bool SPIdriver::run(void *p){
 			EDIstr[count] = 	byte_transfer((uint8_t)0x9F);
 		}
 
+		byte_transfer(0x0);
+		chip_select_disable();
+
+
 		familyCode = (devID[1] >> 5) & 7;
 		densityCode = devID[1] & 15;
 		subCode = (devID[0] >> 5) & 7;
@@ -74,7 +78,6 @@ bool SPIdriver::run(void *p){
 		printf("Extended Device Information String Length: %d\n", EDIstrLen);
 		printf("Extended Device Information String: %02x\n",(uint8_t)EDIstr[0]);
 
-		chip_select_disable();
 		printf("\n");
 		sspMode = OFF_MODE;
 
@@ -104,7 +107,7 @@ bool SPIdriver::run(void *p){
 		byte_transfer((uint8_t)0xD7);
 		byte1 = byte_transfer((uint8_t)0xD7);
 		byte2 = byte_transfer((uint8_t)0xD7);
-
+		byte_transfer(0x0);
 		chip_select_disable();
 
 		rdybsy1 = byte1 & ( 1 << 7 );
@@ -147,6 +150,131 @@ bool SPIdriver::run(void *p){
 		printf("ERASE SUSPEND: %s\n", eraseSuspend? "A SECTOR IS ERASE SUSPENDED" :"NO SECTORS ARE ERASE SUSPENDED");
 
 		sspMode = OFF_MODE;
+	} else if (sspMode == PAGE_MODE) {
+
+		uint8_t page0[40];
+		chip_select_enable();
+
+		// read mode
+		byte_transfer((uint8_t)0x1B);
+		// address page 0 byte 11
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x04);
+		byte_transfer((uint8_t)0x00);
+		// dummy bytes
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+
+		for (uint16_t i = 0; i < 40; i++ ) {
+			page0[i] = byte_transfer(0x0);
+		}
+		chip_select_disable();
+
+		printf("\n\n");
+		for (uint16_t i = 0; i < 40; i+=5 ) {
+			printf("%02x %02x %02x %02x %02x\n",page0[i],page0[i+1],page0[i+2],page0[i+3],page0[i+4]);
+		}
+
+		chip_select_enable();
+
+		// read mode
+		byte_transfer((uint8_t)0x0B);
+		// address page 0 byte 11
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x04);
+		byte_transfer((uint8_t)0x00);
+		// dummy bytes
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+
+		for (uint16_t i = 0; i < 40; i++ ) {
+			page0[i] = byte_transfer(0x0);
+		}
+		chip_select_disable();
+
+		printf("\n\n");
+		for (uint16_t i = 0; i < 40; i+=5 ) {
+			printf("%02x %02x %02x %02x %02x\n",page0[i],page0[i+1],page0[i+2],page0[i+3],page0[i+4]);
+		}
+
+		chip_select_enable();
+
+		// read mode
+		byte_transfer((uint8_t)0x03);
+		// address page 0 byte 11
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x04);
+		byte_transfer((uint8_t)0x00);
+		// dummy bytes
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+
+		for (uint16_t i = 0; i < 40; i++ ) {
+			page0[i] = byte_transfer(0x0);
+		}
+		chip_select_disable();
+
+		printf("\n\n");
+		for (uint16_t i = 0; i < 40; i+=5 ) {
+			printf("%02x %02x %02x %02x %02x\n",page0[i],page0[i+1],page0[i+2],page0[i+3],page0[i+4]);
+		}
+
+		chip_select_enable();
+
+		// read mode
+		byte_transfer((uint8_t)0x01);
+		// address page 0 byte 11
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x04);
+		byte_transfer((uint8_t)0x00);
+		// dummy bytes
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+
+		for (uint16_t i = 0; i < 40; i++ ) {
+			page0[i] = byte_transfer(0x0);
+		}
+		chip_select_disable();
+
+		printf("\n\n");
+		for (uint16_t i = 0; i < 40; i+=5 ) {
+			printf("%02x %02x %02x %02x %02x\n",page0[i],page0[i+1],page0[i+2],page0[i+3],page0[i+4]);
+		}
+
+		chip_select_enable();
+
+		// read mode
+		byte_transfer((uint8_t)0xD2);
+		// address page 0 byte 11
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x04);
+		byte_transfer((uint8_t)0x00);
+		// dummy bytes
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+		byte_transfer((uint8_t)0x00);
+
+		for (uint16_t i = 0; i < 40; i++ ) {
+			page0[i] = byte_transfer(0x0);
+		}
+		chip_select_disable();
+
+		printf("\n\n");
+		for (uint16_t i = 0; i < 40; i+=5 ) {
+			printf("%02x %02x %02x %02x %02x\n",page0[i],page0[i+1],page0[i+2],page0[i+3],page0[i+4]);
+		}
+
+
+		sspMode = OFF_MODE;
 	}
 
 	if (allMode != OFF_MODE) {
@@ -154,7 +282,10 @@ bool SPIdriver::run(void *p){
 		if(allMode == ID_MODE)  {
 			allMode = STATUS_MODE;
 			sspMode = STATUS_MODE;
-		} else if(allMode == STATUS_MODE) {
+		}  else if(allMode == STATUS_MODE) {
+			allMode = PAGE_MODE;
+			sspMode = PAGE_MODE;
+		} else if(allMode == PAGE_MODE) {
 			allMode = OFF_MODE;
 		}
 	}
@@ -244,7 +375,7 @@ char SPIdriver::byte_transfer(char aByte) {
 	// check page 37 on adesto chip
 	LPC_SSP1->DR = aByte;
 	while (LPC_SSP1->SR & (1<<4));
-	int retByte = LPC_SSP1->DR;
+	uint8_t retByte = LPC_SSP1->DR;
 
 	return retByte;
 }
