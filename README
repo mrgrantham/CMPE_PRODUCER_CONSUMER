@@ -1,3 +1,12 @@
+UART HW ASSIGNMENT CMPE 244
+Transmits UART string continuously over <pin names> 
+while continuously listening over <pin names>
+
+Commands:
+	uart
+
+
+
 GPIO HW ASSIGNMENT CMPE 244
 Controls LED on pin P0.23 via switch on
 P0.28 or via serial terminal commands

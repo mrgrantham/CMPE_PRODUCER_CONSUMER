@@ -27,6 +27,7 @@
 #include "examples/examples.hpp"
 #include "test_switch.hpp"
 #include "SPIdriver.hpp"
+#include "UARTdriver.hpp"
 
 /**
  * The main() creates tasks or "threads".  See the documentation of scheduler_task class at scheduler_task.hpp
@@ -85,8 +86,12 @@ int main(void)
         scheduler_add_task(new test_switch());
 	#endif
 
-	#if 1
+	#if 0
         scheduler_add_task(new SPIdriver());
+	#endif
+
+	#if 0
+		scheduler_add_task(new UARTdriver(PRIORITY_MEDIUM));
 	#endif
 
     /**

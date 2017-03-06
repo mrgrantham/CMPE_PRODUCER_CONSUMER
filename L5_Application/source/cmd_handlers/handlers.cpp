@@ -35,6 +35,7 @@
 #include "file_logger.h"
 #include "test_switch.hpp"
 #include "SPIdriver.hpp"
+#include "UARTdriver.hpp"
 
 #include "uart0.hpp"
 #include "wireless.h"
@@ -628,6 +629,20 @@ CMD_HANDLER_FUNC(sspHandler)
 		SPIdriver::setMode(PAGE_MODE);
 	} else if(cmdParams == "all") {
 		SPIdriver::setMode(ALL_MODE);
+	} else {
+		return false;
+	}
+	return true;
+}
+
+CMD_HANDLER_FUNC(uartHandler)
+{
+	if(cmdParams == "roundtrip") {
+		UARTdriver::setMode(BOTH_MODE);
+	} else if(cmdParams == "send") {
+		UARTdriver::setMode(SEND_MODE);
+	} else if(cmdParams == "listen") {
+		UARTdriver::setMode(LISTEN_MODE);
 	} else {
 		return false;
 	}

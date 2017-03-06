@@ -129,6 +129,10 @@ bool terminalTask::taskEntry()
     cp.addHandler(sspHandler, "ssp", "'ssp id' will give you the device ID for the flash chip\n"
     							"'ssp status' will give you status register details for the flash chip\n"
     							"'ssp all' will give you both status and ID for the flash chip\n");
+    cp.addHandler(uartHandler, "uart", "'uart send' will send demo string\n"
+       							"'uart listen' will listen for incoming string\n");
+
+
 
     #if (SYS_CFG_ENABLE_TLM)
     cp.addHandler(telemetryHandler, "telemetry", "Outputs registered telemetry: "

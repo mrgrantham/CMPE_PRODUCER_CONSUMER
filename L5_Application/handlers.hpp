@@ -78,6 +78,9 @@ CMD_HANDLER_FUNC(ledhandler);
 /// Handler to SSP
 CMD_HANDLER_FUNC(sspHandler);
 
+/// Handler for demo UART2 driver
+CMD_HANDLER_FUNC(uartHandler);
+
 /// Handler to reboot the system
 CMD_HANDLER_FUNC(rebootHandler);
 
