@@ -27,6 +27,7 @@ enum UARTMode {
 class UARTdriver : public scheduler_task {
 private:
 	static UARTMode uartMode;
+	static uint8_t max_count;
 
 public:
         UARTdriver(uint8_t priority);
@@ -37,6 +38,7 @@ public:
         static void uart3_send(char data);
         static char uart3_receive();
         static void setMode(UARTMode mode);
+        static void setMaxCount(uint8_t max);
 };
 
 

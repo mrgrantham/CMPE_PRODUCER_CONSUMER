@@ -643,6 +643,10 @@ CMD_HANDLER_FUNC(uartHandler)
 		UARTdriver::setMode(SEND_MODE);
 	} else if(cmdParams == "listen") {
 		UARTdriver::setMode(LISTEN_MODE);
+	} else if(cmdParams.beginsWith("count")) {
+		cmdParams.eraseFirstWords(1,' ');
+		printf("\nNEW MAX COUNT: %s\n",cmdParams());
+		UARTdriver::setMaxCount(str::toInt(cmdParams));
 	} else {
 		return false;
 	}

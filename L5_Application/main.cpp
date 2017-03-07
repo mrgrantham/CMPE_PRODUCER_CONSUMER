@@ -90,7 +90,7 @@ int main(void)
         scheduler_add_task(new SPIdriver());
 	#endif
 
-	#if 0
+	#if 1
 		scheduler_add_task(new UARTdriver(PRIORITY_MEDIUM));
 	#endif
 
