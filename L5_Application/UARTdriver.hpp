@@ -37,6 +37,8 @@ public:
         static char uart2_receive();
         static void uart3_send(char data);
         static char uart3_receive();
+        static void uart_send(char data, LPC_UART_TypeDef *uartStruct);
+        static char uart_receive(LPC_UART_TypeDef *uartStruct);
         static void setMode(UARTMode mode);
         static void setMaxCount(uint8_t max);
 };

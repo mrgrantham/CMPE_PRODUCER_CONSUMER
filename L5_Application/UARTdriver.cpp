@@ -72,47 +72,49 @@ bool UARTdriver::init(void)
 	LPC_UART2->LCR |= (1 << 2);
 	LPC_UART3->LCR |= (1 << 2);
 
+	// enable RBR interrupt
+//	LPC_UART2->IER |= (1 << 0);
+//	LPC_UART3->IER |= (1 << 0);
+
 	return true;
 }
 
 void UARTdriver::uart2_send(char data) {
-	while (!(LPC_UART2->LSR & (1 << 6))) {
-		// add sleep function
-		//vTaskDelay(10);
-	}
-	LPC_UART2->THR = data; //sending byte
+	uart_send(data, LPC_UART2);
 }
 
 char UARTdriver::uart2_receive() {
-	//check status register and then read
-	uint8_t data = 0;
-	if (LPC_UART2->LSR & (1 << 0)) { // checks for 0 to indicate valid data present
-		data = LPC_UART2->RBR;
-	} else {
-		data = 0;
-	}
-	return data;
+	return uart_receive(LPC_UART3);
 }
 
 void UARTdriver::uart3_send(char data) {
-	while (!(LPC_UART3->LSR & (1 << 6))) {
-		// add sleep function
-		//vTaskDelay(1);
-	}
-	LPC_UART3->THR = data; //sending byte
+	uart_send(data, LPC_UART3);
 }
 
 char UARTdriver::uart3_receive() {
+	return uart_receive(LPC_UART3);
+}
+
+void UARTdriver::uart_send(char data, LPC_UART_TypeDef *uartStruct) {
+	while (!(uartStruct->LSR & (1 << 6))) {
+		// add sleep function
+		//vTaskDelay(1);
+	}
+	uartStruct->THR = data; //sending byte
+}
+
+char UARTdriver::uart_receive(LPC_UART_TypeDef *uartStruct) {
+
 	//check status register and then read
 	uint8_t data = 0;
-	if (LPC_UART3->LSR & (1 << 0)) { // checks for 0 to indicate valid data present
-		data = LPC_UART3->RBR;
+	if (uartStruct->LSR & (1 << 0)) { // checks for 0 to indicate valid data present
+		data = uartStruct->RBR;
 	} else {
 		data = 0;
 	}
 	return data;
-}
 
+}
 
 
 bool UARTdriver::run(void *p) {
