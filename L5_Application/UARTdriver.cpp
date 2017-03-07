@@ -107,11 +107,13 @@ char UARTdriver::uart_receive(LPC_UART_TypeDef *uartStruct) {
 
 	//check status register and then read
 	uint8_t data = 0;
-	if (uartStruct->LSR & (1 << 0)) { // checks for 0 to indicate valid data present
-		data = uartStruct->RBR;
-	} else {
-		data = 0;
-	}
+//	if (uartStruct->LSR & (1 << 0)) { // checks for 0 to indicate valid data present
+//		data = uartStruct->RBR;
+//	} else {
+//		data = 0;
+//	}
+	while (!(uartStruct->LSR & (1 << 0)));
+	data = uartStruct->RBR;
 	return data;
 
 }
