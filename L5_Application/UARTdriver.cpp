@@ -12,7 +12,7 @@
 #include "string.h"
 
 UARTMode UARTdriver::uartMode = NO_MODE;
-uint8_t UARTdriver::max_count=10;
+uint8_t UARTdriver::max_count=100;
 
 
 UARTdriver::UARTdriver(uint8_t priority) : scheduler_task("task", 2000, priority)
@@ -120,16 +120,20 @@ char UARTdriver::uart_receive(LPC_UART_TypeDef *uartStruct) {
 bool UARTdriver::run(void *p) {
 	static uint8_t count=0;
 	static uint8_t counting=0;
-	static char * name = "JAMES ANDREW GRANTHAM 010766912 SJSU MASTERS OF COMPUTER ENGINEERING STUDENT CMPE244CMPE244CMPE244CMPE244CMPE244CMPE244CMPE244CMPE244CMPE244CMPE244CMPE244CMPE244CMPE244\n";
+	static char * message = "JAMES ANDREW GRANTHAM 010766912 SJSU MASTERS OF COMPUTER ENGINEERING STUDENT CMPE244CMPE244CMPE244\n";
+	static uint16_t messagelen=0;
+	static uint16_t messageIndex;
 
 	static uint8_t first_run = 1;
 	if (first_run) {
-		max_count = strlen(name);
+		messagelen = strlen(message);
 		first_run = 0;
 	}
 
 	if (count == max_count && counting) {
+
 		uartMode = NO_MODE;
+		u0_dbg_printf("ENDING %s MODE\n", (SEND_MODE)? "SEND" : ((LISTEN_MODE)? "LISTEN" : "ROUNDTRIP" ) );
 		counting=0;
 	} else if (!counting && (uartMode == BOTH_MODE || uartMode == LISTEN_MODE || uartMode == SEND_MODE)) {
 		count=0;
@@ -138,7 +142,9 @@ bool UARTdriver::run(void *p) {
 
 	if (uartMode == SEND_MODE || uartMode == BOTH_MODE) {
 		//u0_dbg_printf("|");
-		UARTdriver::uart2_send(name[count]);
+		UARTdriver::uart2_send(message[messageIndex]);
+		messageIndex++;
+		messageIndex %= messagelen;
 	}
 	if (uartMode == LISTEN_MODE || uartMode == BOTH_MODE) {
 		uint8_t cVal = UARTdriver::uart2_receive();
