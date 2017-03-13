@@ -10,9 +10,28 @@
 #include <stdio.h>
 #include "printf_lib.h"
 #include "string.h"
+#include "lpc_isr.h"
 
 UARTMode UARTdriver::uartMode = NO_MODE;
 uint32_t UARTdriver::max_count=100;
+
+QueueHandle_t rxq = 0;
+
+void uartHandler(LPC_UART_TypeDef *uartStruct) {
+	static char data=0;
+	data = UARTdriver::uart_receive(uartStruct);
+    if(!xQueueSendFromISR(rxq, &data, NULL)) {
+        puts("Failed to send item");
+    }
+}
+
+void uart2Handler() {
+	uartHandler(LPC_UART2);
+}
+
+void uart3Handler() {
+	uartHandler(LPC_UART3);
+}
 
 
 UARTdriver::UARTdriver(uint8_t priority) : scheduler_task("task", 2000, priority)
@@ -23,6 +42,7 @@ UARTdriver::UARTdriver(uint8_t priority) : scheduler_task("task", 2000, priority
 
 bool UARTdriver::init(void)
 {
+	rxq = xQueueCreate(100, sizeof(char));
 	LPC_SC->PCONP |= (1 << 24); // turn on the UART
 	LPC_SC->PCONP |= (1 << 25); // turn on the UART
 
@@ -69,13 +89,19 @@ bool UARTdriver::init(void)
 	LPC_UART3->LCR = 3;
 
 	// set 2 stop bits
-//	LPC_UART2->LCR |= (1 << 2);
-//	LPC_UART3->LCR |= (1 << 2);
+	LPC_UART2->LCR |= (1 << 2);
+	LPC_UART3->LCR |= (1 << 2);
+
+	NVIC_EnableIRQ(UART2_IRQn);
+	NVIC_EnableIRQ(UART3_IRQn);
+
 
 	// enable RBR interrupt
-//	LPC_UART2->IER |= (1 << 0);
-//	LPC_UART3->IER |= (1 << 0);
+	LPC_UART2->IER |= (1 << 0);
+	LPC_UART3->IER |= (1 << 0);
 
+	isr_register(UART2_IRQn, uart2Handler);
+	isr_register(UART3_IRQn, uart3Handler);
 	return true;
 }
 
@@ -136,7 +162,7 @@ bool UARTdriver::run(void *p) {
 	if (count == max_count && counting) {
 
 		uartMode = NO_MODE;
-		u0_dbg_printf("COUNTER: %i MAX: %i\nMESS LEN: %i\nENDING %s MODE\n",count,max_count,messagelen, (SEND_MODE)? "SEND" : ((LISTEN_MODE)? "LISTEN" : "ROUNDTRIP" ) );
+		u0_dbg_printf("\nENDING %s MODE\n",count,max_count,messagelen, (SEND_MODE)? "SEND" : ((LISTEN_MODE)? "LISTEN" : "ROUNDTRIP" ) );
 		counting=0;
 	} else if (!counting && (uartMode == BOTH_MODE || uartMode == LISTEN_MODE || uartMode == SEND_MODE)) {
 		count=0;
@@ -144,15 +170,16 @@ bool UARTdriver::run(void *p) {
 	}
 
 	if (uartMode == SEND_MODE || uartMode == BOTH_MODE) {
-		UARTdriver::uart2_send(message[messageIndex]);
+		UARTdriver::uart3_send(message[messageIndex]);
 		messageIndex++;
 		messageIndex %= messagelen;
 	}
 	if (uartMode == LISTEN_MODE || uartMode == BOTH_MODE) {
-		uint8_t cVal = UARTdriver::uart2_receive();
-		if (cVal) {
-			u0_dbg_printf("%c",cVal);
-		}
+		uint8_t cVal = 0;
+
+        while(xQueueReceive(rxq, &cVal, 100) == true) {
+        	u0_dbg_printf("%c",cVal);
+        }
 	}
 	if (count < max_count && counting) {
 		count++;

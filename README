@@ -1,41 +1,32 @@
+External Interrupt Assignment CMPE 244
+--------------------------------------
+Engage external interrupts to activate when a switch is flipped
+Terminal Commands:
+	eint start <pin #>
+	eint stop  <pin #>
+	   
+
 UART HW ASSIGNMENT CMPE 244
+--------------------------------------
 Transmits UART string continuously over <pin names> 
 while continuously listening over <pin names>
 
-Commands:
-	uart
-
+Terminal Commands:
+	uart send
+	uart listen
+	uart roundtrip
+	uart count <number>
 
 
 GPIO HW ASSIGNMENT CMPE 244
+--------------------------------------
 Controls LED on pin P0.23 via switch on
 P0.28 or via serial terminal commands
 
-Commands:
+Terminal Commands:
     led on
     led off
     led strobe
     led switch
     led p<pattern>
 
------------------------
-Files added or modified
------------------------
-main.cpp
-test_switch.hpp
-test_switch.cpp
-handler.hpp
-handler.cpp
-terminal.cpp
-
-
------------------------------------------------------------------------------
-To get started, have a look at L5_Application/main.cpp and the example tasks.
-
-You can change a #define 0 to #define 1 for one example at a time and look
-through the code of each example.
-
-The general idea is to interact with the project through terminal commands.
------------------------------------------------------------------------------
-See "ChangeLog" for the changes made to the sample project source code.
------------------------------------------------------------------------------
