@@ -15,13 +15,13 @@
 
 
     void callback1() {
-    	testEINT::setMode(EINT_TEST);
+    	//testEINT::setMode(CALL1_TEST);
 		u0_dbg_printf("callback1\n");
 
     }
 
     void callback2() {
-    	testEINT::setMode(EINT_TEST);
+    	//testEINT::setMode(CALL2_TEST);
 		u0_dbg_printf("callback2\n");
 
     }
@@ -36,8 +36,7 @@
 	    setRunDuration(100);
 	}
 
-    bool testEINT::init(void) {
-    	uint8_t pin_num = 0;
+	void configure_outputP0(int pin_num) {
     	uint8_t pin_num_adj = (pin_num << 1) % 32;
 
     	if ((pin_num * 2) < 32) {
@@ -50,8 +49,21 @@
     		LPC_PINCON->PINMODE1 |=  ( 1 << pin_num_adj );
     	}
 
+    	LPC_GPIO0->FIODIR &= ~( 1 << pin_num );
+
+	}
+
+	void configure_outputP2(int pin_num) {
+		LPC_PINCON->PINSEL2  &= ~( 3 << pin_num );
+		LPC_PINCON->PINMODE2 &= ~( 3 << pin_num );
+		LPC_PINCON->PINMODE2 |=  ( 1 << pin_num );
     	LPC_GPIO2->FIODIR &= ~( 1 << pin_num );
 
+	}
+
+    bool testEINT::init(void) {
+    	configure_outputP0(0);
+    	configure_outputP2(7);
 		enable_external_interrupts();
     	return true;
     }
@@ -65,11 +77,13 @@
 		} else if(eintMode == EINT_ON) {
 			printf("EINT ON\n");
         	testEINT::setMode(NIL_MODE);
-		} else if(eintMode == EINT_TEST) {
-			printf("INTERRUPT TRIGGERED\n");
+		} else if(eintMode == CALL1_TEST) {
+			//printf("CALL1\n");
+			u0_dbg_printf("callback1\n");
         	testEINT::setMode(NIL_MODE);
-		} else if(eintMode == GEN_EINT_TEST) {
-			printf("GENERIC INTERRUPT TRIGGERED\n");
+		} else if(eintMode == CALL2_TEST) {
+			//printf("CALL2\n");
+			u0_dbg_printf("callback2\n");
         	testEINT::setMode(NIL_MODE);
 		}
 

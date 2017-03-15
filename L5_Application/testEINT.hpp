@@ -15,9 +15,9 @@
 enum EINTMode {
 	EINT_OFF,
 	EINT_ON,
-	EINT_TEST,
+	CALL1_TEST,
 	NIL_MODE,
-	GEN_EINT_TEST
+	CALL2_TEST
 };
 
 class testEINT : public scheduler_task {

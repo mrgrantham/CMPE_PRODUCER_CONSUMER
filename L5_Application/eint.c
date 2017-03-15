@@ -15,9 +15,9 @@ typedef struct callback_s {
 	bool rise;
 }  callback_s_t;
 
-static callback_s_t port0callbacks[64];
+static callback_s_t port0callbacks[32];
 static uint16_t port0callbacksCount = 0;
-static callback_s_t port2callbacks[64];
+static callback_s_t port2callbacks[32];
 static uint16_t port2callbacksCount = 0;
 
 void EINT3_IRQHandler(void) {
@@ -25,18 +25,18 @@ void EINT3_IRQHandler(void) {
 			static int count = 0;
 			count++;
 			//printf("SET\n");
-			u0_dbg_printf("SET\n");
+			//u0_dbg_printf("SET\n");
 
 			for (int i = 0; i < port0callbacksCount; i++) {
 				if (port0callbacks[i].rise) {
 					if (LPC_GPIOINT->IO0IntStatR & (1 << port0callbacks[i].pin)) {
 						(*port0callbacks[i].func)();
-						LPC_GPIOINT->IO0IntClr &= (1<<port0callbacks[i].pin);
+						LPC_GPIOINT->IO0IntClr = (1<<port0callbacks[i].pin);
 					}
 				} else {
 					if (LPC_GPIOINT->IO0IntStatF & (1 << port0callbacks[i].pin)) {
 						(*port0callbacks[i].func)();
-						LPC_GPIOINT->IO0IntClr &= (1<<port0callbacks[i].pin);
+						LPC_GPIOINT->IO0IntClr = (1<<port0callbacks[i].pin);
 					}
  				}
 			}
@@ -45,17 +45,17 @@ void EINT3_IRQHandler(void) {
 				if (port2callbacks[i].rise) {
 					if (LPC_GPIOINT->IO2IntStatR & (1 << port2callbacks[i].pin)) {
 						(*port2callbacks[i].func)();
-						LPC_GPIOINT->IO2IntClr &= (1<<port2callbacks[i].pin);
+						LPC_GPIOINT->IO2IntClr = (1<<port2callbacks[i].pin);
 					}
 				} else {
 					if (LPC_GPIOINT->IO2IntStatF & (1 << port2callbacks[i].pin)) {
 						(*port2callbacks[i].func)();
-						LPC_GPIOINT->IO2IntClr &= (1<<port2callbacks[i].pin);
+						LPC_GPIOINT->IO2IntClr = (1<<port2callbacks[i].pin);
 					}
  				}
 			}
-//            LPC_GPIOINT->IO2IntClr = 0xFFFFFFFF;
-//            LPC_GPIOINT->IO0IntClr = 0xFFFFFFFF;
+            LPC_GPIOINT->IO2IntClr = 0xFFFFFFFF;
+            LPC_GPIOINT->IO0IntClr = 0xFFFFFFFF;
 
 }
 
