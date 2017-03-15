@@ -32,8 +32,8 @@ extern "C" {
 
 /// The type of the interrupt for the port pin.
 typedef enum {
-    eint_rising_edge,  ///< Interrupt on rising edge
-    eint_falling_edge  ///< Interrupt on falling edge
+	eint_falling_edge,  ///< Interrupt on falling edge
+    eint_rising_edge  ///< Interrupt on rising edge
 } eint_intr_t;
 
 /**

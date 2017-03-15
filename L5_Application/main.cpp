@@ -28,6 +28,10 @@
 #include "test_switch.hpp"
 #include "SPIdriver.hpp"
 #include "UARTdriver.hpp"
+#include "testEINT.hpp"
+
+
+#include <stdio.h>
 
 /**
  * The main() creates tasks or "threads".  See the documentation of scheduler_task class at scheduler_task.hpp
@@ -90,8 +94,23 @@ int main(void)
         scheduler_add_task(new SPIdriver());
 	#endif
 
-	#if 1
+	#if 0
 		scheduler_add_task(new UARTdriver(PRIORITY_MEDIUM));
+	#endif
+
+	#if 1
+		scheduler_add_task(new testEINT());
+//	while(1) {
+//		static int count=0;
+//		for (int i=0;i<1000000;i++);
+//
+//		if ((LPC_GPIO0->FIOPIN & (1 << 0))) {
+//			printf("%d: SWITCH IS HIGH\n", count);
+//		} else {
+//			printf("%d: SWITCH IS LOW\n",count);
+//		}
+//		count++;
+//	}
 	#endif
 
     /**

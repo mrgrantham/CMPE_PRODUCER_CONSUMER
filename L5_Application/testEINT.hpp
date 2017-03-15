@@ -13,8 +13,11 @@
 #include "str.hpp"
 
 enum EINTMode {
-	OFF_MODE,
-	ON_MODE,
+	EINT_OFF,
+	EINT_ON,
+	EINT_TEST,
+	NIL_MODE,
+	GEN_EINT_TEST
 };
 
 class testEINT : public scheduler_task {
@@ -22,12 +25,21 @@ private:
 	static EINTMode currMode;
 	static EINTMode prevMode;
 
+	static bool SW1;
+	static uint32_t SW1port;
+	static uint32_t SW1pin;
+
+	static bool SW2;
+	static uint32_t SW2port;
+	static uint32_t SW2pin;
+
+
 public:
     testEINT();
     bool init(void);
     bool run(void *p);
-    void enable_external_interrupts();
-    void disable_external_interrupt();
+    static void enable_external_interrupts();
+    static void disable_external_interrupt();
     static void setMode(EINTMode mode);
 };
 
