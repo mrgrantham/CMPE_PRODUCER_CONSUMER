@@ -29,7 +29,7 @@
 #include "SPIdriver.hpp"
 #include "UARTdriver.hpp"
 #include "testEINT.hpp"
-
+#include "test_task.h"
 
 #include <stdio.h>
 
@@ -86,7 +86,7 @@ int main(void)
         scheduler_add_task(new example_io_demo());
     #endif
 
-	#if 1
+	#if 0
         scheduler_add_task(new test_switch());
 	#endif
 
@@ -98,19 +98,13 @@ int main(void)
 		scheduler_add_task(new UARTdriver(PRIORITY_MEDIUM));
 	#endif
 
-	#if 1
+	#if 0
 		scheduler_add_task(new testEINT());
-//	while(1) {
-//		static int count=0;
-//		for (int i=0;i<1000000;i++);
-//
-//		if ((LPC_GPIO0->FIOPIN & (1 << 0))) {
-//			printf("%d: SWITCH IS HIGH\n", count);
-//		} else {
-//			printf("%d: SWITCH IS LOW\n",count);
-//		}
-//		count++;
-//	}
+	#endif
+
+	#if 1
+		xTaskCreate( task1, (const char*)"task1", 2048, 0 , PRIORITY_MEDIUM, 0 );
+		xTaskCreate( task2, (const char*)"task2", 2048, 0 , PRIORITY_MEDIUM, 0 );
 	#endif
 
     /**
