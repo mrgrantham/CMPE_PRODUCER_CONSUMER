@@ -29,9 +29,8 @@
 #include "SPIdriver.hpp"
 #include "UARTdriver.hpp"
 #include "testEINT.hpp"
-#include "test_task.h"
-
 #include <stdio.h>
+#include <test_task.hpp>
 
 /**
  * The main() creates tasks or "threads".  See the documentation of scheduler_task class at scheduler_task.hpp
