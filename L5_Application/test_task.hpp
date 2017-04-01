@@ -11,6 +11,17 @@
 extern "C" {
 #endif
 
+
+
+typedef enum Orientation {
+	none,
+	down,
+	up,
+	left,
+	right
+
+} Orientation;
+
 void task1(void* p);
 void task2(void* p);
 

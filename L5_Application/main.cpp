@@ -31,6 +31,122 @@
 #include "testEINT.hpp"
 #include <stdio.h>
 #include <test_task.hpp>
+//#include "L4_IO/wireless/wireless.h"
+#include "wireless.h"
+#include "LED_display.hpp"
+#include "L4_IO/wireless/src/mesh.h"
+#include "L4_IO/wireless/src/mesh_typedefs.h"
+#include "light_sensor.hpp"
+
+void ping_and_set_led(uint8_t addr, uint8_t led_num)
+{
+    /* Sending NULL packet is a "PING" packet.
+     * No special code is required at the other node since the
+     * other node will automatically send the ACK back.
+     */
+
+	LED_Display inst = LED_Display::getInstance();
+
+    const char max_hops = 2;
+    mesh_packet_t pkt;
+    mesh_send(addr, mesh_pkt_ack, NULL, 0, max_hops);
+
+    /* Turn LED on or off based on if we get ACK packet within 100ms */
+    if ( wireless_get_ack_pkt(&pkt, 100)) {
+    	inst.setNumber(1);
+        printf("pkt recvd\n");
+    }
+    else {
+    	inst.setNumber(0);
+        printf("NO pkt recvd\n");
+    }
+}
+
+/* Common between commander and sensor node
+ * This identifies "what" the commander is asking for
+ */
+enum {
+    req_light = 1, /* Request light sensor reading       */
+    req_all = 2,
+};
+
+void commander(void)
+{
+char hops = 1;
+char addr = 125;
+char cmd  = req_light; /* Request light sensor data */
+
+/* mesh_pkt_ack_app means the destination should ACK manually
+ * with our data, and an auto-ack is not performed.
+ */
+mesh_send(addr, mesh_pkt_ack_app, &cmd, 1, hops);
+
+mesh_packet_t pkt;
+if (wireless_get_ack_pkt(&pkt, 100)) {
+     /* We need to deform packet the same way it was formed */
+     /* Parameters should be same after 4th parameter into mesh_form_pkt() */
+     uint16_t light = 0;
+     wireless_deform_pkt(&pkt, 1, &light, sizeof(light));
+ 	LED_Display inst = LED_Display::getInstance();
+ 	inst.setNumber(light);
+
+}
+}
+
+void sensor(void)
+{
+    mesh_packet_t pkt;
+    uint16_t light = 0;
+
+    if (wireless_get_rx_pkt(&pkt, 100)) {
+        /* Check if we were asked for an application ACK */
+        if (wireless_is_ack_required(&pkt)) {
+
+            /* Send the packet back based on the commanded byte */
+            const char cmd = pkt.data[0];
+        	Light_Sensor LS = Light_Sensor::getInstance();
+
+            switch (cmd) {
+                case req_light :
+                    /* Send packet back to network source: pkt.nwk.src */
+                    light = LS.getRawValue();
+                    wireless_form_pkt(&pkt, pkt.nwk.src, mesh_pkt_ack_rsp, 1,
+                                      1,
+                                      &light, sizeof(light));
+                break;
+
+                case req_all :
+                    /* TODO: You figure this out.  You can send up to 24 bytes of data */
+                break;
+
+                default:
+                    printf("ERROR: Invalid data requested!\n");
+                break;
+            }
+
+            mesh_send_formed_pkt(&pkt);
+        }
+    }
+}
+
+class ping : public scheduler_task
+{
+    public:
+        ping(uint8_t priority) : scheduler_task("task", 2000, priority)
+        {
+            /* Nothing to init */
+        }
+
+        bool run(void *p)
+        {
+            //ping_and_set_led(125, 1);
+            commander();
+        	//printf("sending from: %d\n", mesh_get_node_address());
+
+            //vTaskDelay(1000);
+            return true;
+        }
+};
 
 /**
  * The main() creates tasks or "threads".  See the documentation of scheduler_task class at scheduler_task.hpp
@@ -82,6 +198,7 @@ int main(void)
      * This also shows you how to send a wireless packets to other boards.
      */
     #if 0
+    	mesh_set_node_address(200);
         scheduler_add_task(new example_io_demo());
     #endif
 
@@ -105,6 +222,14 @@ int main(void)
 		xTaskCreate( task1, (const char*)"task1", 2048, 0 , PRIORITY_MEDIUM, 0 );
 		xTaskCreate( task2, (const char*)"task2", 2048, 0 , PRIORITY_MEDIUM, 0 );
 	#endif
+
+	#if 0
+		LED_Display inst = LED_Display::getInstance();
+		inst.setNumber(4);
+		mesh_set_node_address(200);
+		scheduler_add_task(new ping(PRIORITY_MEDIUM));
+	#endif
+
 
     /**
      * Change "#if 0" to "#if 1" to enable examples.
