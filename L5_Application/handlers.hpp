@@ -81,6 +81,9 @@ CMD_HANDLER_FUNC(sspHandler);
 /// Handler for demo UART2 driver
 CMD_HANDLER_FUNC(uartHandler);
 
+/// Handler for orientation demo
+CMD_HANDLER_FUNC(orientationCmd);
+
 /// Handler to reboot the system
 CMD_HANDLER_FUNC(rebootHandler);
 

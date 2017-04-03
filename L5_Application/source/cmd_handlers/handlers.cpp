@@ -653,6 +653,26 @@ CMD_HANDLER_FUNC(uartHandler)
 	return true;
 }
 
+CMD_HANDLER_FUNC(orientationCmd) {
+	scheduler_task *task1 = scheduler_task::getTaskPtrByName("task1");
+	scheduler_task *task2 = scheduler_task::getTaskPtrByName("task2");
+
+	if(cmdParams == "on") {
+		printf("Activating Orientation Command...\n");
+		vTaskResume(task1->getTaskHandle());
+		vTaskResume(task2->getTaskHandle());
+		// something
+	} else if(cmdParams == "off") {
+		printf("Deactivating Orientation Command...\n");
+		vTaskSuspend(task1->getTaskHandle());
+		vTaskSuspend(task2->getTaskHandle());
+		// something else
+	} else {
+		return false;
+	}
+	return true;
+}
+
 CMD_HANDLER_FUNC(rebootHandler)
 {
     output.putline("Rebooting System");

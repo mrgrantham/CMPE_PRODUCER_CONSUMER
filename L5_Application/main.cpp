@@ -219,8 +219,10 @@ int main(void)
 	#endif
 
 	#if 1
-		xTaskCreate( task1, (const char*)"task1", 2048, 0 , PRIORITY_MEDIUM, 0 );
-		xTaskCreate( task2, (const char*)"task2", 2048, 0 , PRIORITY_MEDIUM, 0 );
+		scheduler_add_task(new task1(PRIORITY_MEDIUM));
+		scheduler_add_task(new task2(PRIORITY_MEDIUM));
+//		xTaskCreate( task1, (const char*)"task1", 2048, 0 , PRIORITY_MEDIUM, 0 );
+//		xTaskCreate( task2, (const char*)"task2", 2048, 0 , PRIORITY_MEDIUM, 0 );
 	#endif
 
 	#if 0

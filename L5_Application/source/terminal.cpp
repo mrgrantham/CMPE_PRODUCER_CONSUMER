@@ -131,6 +131,7 @@ bool terminalTask::taskEntry()
     							"'ssp all' will give you both status and ID for the flash chip\n");
     cp.addHandler(uartHandler, "uart", "'uart send' will send demo string\n"
        							"'uart listen' will listen for incoming string\n");
+    cp.addHandler(orientationCmd, "orientation", "Two options: 'orientation on' or 'orientation off'" );
 
 
 
